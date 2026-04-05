@@ -22,5 +22,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Ghosthand"
+rootProject.name = "Ghosthand-J"
 include(":app")

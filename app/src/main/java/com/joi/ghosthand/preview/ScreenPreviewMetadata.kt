@@ -1,0 +1,46 @@
+/*
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ */
+
+package com.joi.ghosthand.preview
+
+import com.joi.ghosthand.R
+
+import com.joi.ghosthand.screen.read.ScreenReadPayload
+
+object ScreenPreviewMetadata {
+    fun previewPath(
+        screenshotUsableNow: Boolean,
+        previewWidth: Int?,
+        previewHeight: Int?
+    ): String? {
+        if (!screenshotUsableNow || previewWidth == null || previewHeight == null) {
+            return null
+        }
+        return "/screenshot?width=$previewWidth&height=$previewHeight"
+    }
+
+    fun apply(
+        payload: ScreenReadPayload,
+        screenshotUsableNow: Boolean,
+        previewWidth: Int?,
+        previewHeight: Int?
+    ): ScreenReadPayload {
+        val previewAdvertised = screenshotUsableNow && previewWidth != null && previewHeight != null
+        val advertisedPreviewWidth = previewWidth.takeIf { previewAdvertised }
+        val advertisedPreviewHeight = previewHeight.takeIf { previewAdvertised }
+        return payload.copy(
+            visualAvailable = screenshotUsableNow,
+            previewAvailable = previewAdvertised,
+            previewPath = previewPath(
+                screenshotUsableNow = previewAdvertised,
+                previewWidth = advertisedPreviewWidth,
+                previewHeight = advertisedPreviewHeight
+            ),
+            previewWidth = advertisedPreviewWidth,
+            previewHeight = advertisedPreviewHeight
+        )
+    }
+}
